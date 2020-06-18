@@ -7,6 +7,7 @@
 ### test - returns a message to check if bot's working
 ### server - provide server detail (name and user count)
 ### help - lists all commands
+### random - gets a random picture
 
 # Links
 [Invite Link](https://discord.com/oauth2/authorize?client_id=697682232797560852&scope=bot&permissions=203840)

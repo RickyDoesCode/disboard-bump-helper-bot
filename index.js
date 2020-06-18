@@ -12,7 +12,6 @@ const {
 
 client.once('ready', () => {
     client.user.setActivity(prefix, { type: 'LISTENING' });
-	console.log('Bot is ready!');
 });
 
 client.on('message', message => {
@@ -33,10 +32,16 @@ client.on('message', message => {
                 `)
                 .setColor("#19eb3b");
                 break;
+            case 'random':
+                const id = Math.floor( Math.random() * 1085 ) + 1;
+                console.log(id);
+                embed.setImage(`https://picsum.photos/id/${id}/500`)
+                break;
             case 'help':
                 embed.setDescription(`
                     test - returns a message to check if bot's working
                     server - provide server detail (name and user count)
+                    random - gets random picture
                 `)
                     .setColor("#f1d400");
                 break;
