@@ -16,6 +16,7 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
+    console.log(message);
     const embed = new MessageEmbed()
             .setTimestamp()
 	        .setFooter('Made with ❤️️');
@@ -51,7 +52,11 @@ client.on('message', message => {
         }
         message.channel.send(embed);
     }
-    if (message.embeds.length && message.embeds[0].description.indexOf("Bump done") > -1) {
+    if (
+        message.embeds.length &&
+        message.author.username == 'DISBOARD' &&
+        message.embeds[0].description.indexOf("Bump done") > -1
+    ) {
         setTimeout(() => {
             embed
                 .setTitle("Bump timer's out!")
