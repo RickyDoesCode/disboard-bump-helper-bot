@@ -16,7 +16,6 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
-    console.log(message);
     const embed = new MessageEmbed()
             .setTimestamp()
 	        .setFooter('Made with ❤️️');
