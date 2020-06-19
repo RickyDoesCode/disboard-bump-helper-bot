@@ -11,17 +11,19 @@ const {
 } = process.env;
 
 client.once('ready', () => {
+    console.log('Bot is ready!');
     client.user.setActivity(prefix, { type: 'LISTENING' });
 });
 
-client.on('message', message => {
+client.on('message', async message => {
     const embed = new MessageEmbed()
             .setTimestamp()
-	        .setFooter('Made with ❤️️');
-    if (message.content.indexOf(prefix) > -1) {
+            .setFooter('Made with ❤️️');
+    if (message.content.startsWith(prefix)) {
         const text = message.content.replace(prefix, "");
+        const [ command, ...args ] = text.split(" ")
         let toSend = [];
-        switch (text) {
+        switch (command) {
             case 'test':
                 embed.setDescription('Oh hello there!')
                     .setColor("#005bbe");
@@ -43,7 +45,7 @@ client.on('message', message => {
                 toSend = [
                     'test - returns a message to check if bot\'s working',
                     'server - provide server detail (name and user count)',
-                    'random - gets random picture'
+                    'random - gets random picture',
                 ]
                 embed.setDescription(toSend.join('\n'))
                     .setColor("#f1d400");
@@ -52,7 +54,7 @@ client.on('message', message => {
                 toSend = [
                     'Oops!',
                     'We didn\'t find that command!',
-                    'Try ${prefix}help for more info!'
+                    `Try ${prefix}help for more info!`
                 ]
                 embed.setDescription(toSend.join('\n'))
                     .setColor("#df0000");
