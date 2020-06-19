@@ -19,7 +19,10 @@ client.once('ready', () => {
 client.on('message', async message => {
     const embed = new MessageEmbed()
             .setTimestamp()
-            .setFooter('Made with ❤️️');
+            .setFooter(
+                'Made with ❤️️',
+                'https://cdn.discordapp.com/avatars/404342560551731201/cdc1a88b47c0c847966d0f37c37ee2a0.png?size=1024',
+            );
     if (message.content.startsWith(prefix)) {
         const text = message.content.replace(prefix, "");
         const [ command, ...args ] = text.split(" ")
