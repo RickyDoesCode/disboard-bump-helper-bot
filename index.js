@@ -13,7 +13,6 @@ const {
 } = process.env;
 
 client.once('ready', () => {
-    console.log('Bot is ready!');
     client.user.setActivity(prefix, { type: 'LISTENING' });
 });
 
@@ -31,9 +30,13 @@ client.on('message', async message => {
                     .setColor("#005bbe");
                 break;
             case 'server': 
-                // message.guild.icon;
                 embed.setTitle(message.guild.name)
                     .setDescription(`${message.guild.memberCount} members`)
+                    .setImage(message.guild.iconURL({
+                        dynamic: true,
+                        format: 'png',
+                        size: 1024
+                    }))
                     .setColor("#19eb3b");
                 break;
             case 'user':
@@ -45,26 +48,31 @@ client.on('message', async message => {
                         .setColor('#df0000')
                         break;
                     }
-                    toSend = [
-                        `Username: ${user.username}`,
-                        `This person is ${user.bot ? '' : 'not '}a bot`
-                    ]
                     embed.setTitle("User Information")
-                        .setDescription(toSend.join('\n'))
-                        .setImage(user.displayAvatarURL({ dynamic: true }))
+                        .addFields(
+                            { name: "Username", value: user.username },
+                            { name: "Status", value: user.bot ? 'Bot' : 'Human' }
+                        )
+                        .setImage(user.displayAvatarURL({
+                            dynamic: true,
+                        format: 'png',
+                        size: 1024
+                        }))
                     break;
                 }
-                toSend = [
-                    `Username: ${message.author.username}`,
-                    `This person is ${message.author.bot ? '' : 'not '}a bot`
-                ]
                 embed.setTitle("User Information")
-                    .setDescription(toSend.join('\n'))
-                    .setImage(message.author.displayAvatarURL({ dynamic: true }))
+                    .addFields(
+                        { name: "Username", value: message.author.username },
+                        { name: "Status", value: message.author.bot ? 'Bot' : 'Human' }
+                    )
+                    .setImage(message.author.displayAvatarURL({
+                        dynamic: true,
+                        format: 'png',
+                        size: 1024
+                    }))
                 break;
             case 'random':
                 const id = Math.floor( Math.random() * 1085 ) + 1;
-                console.log(id);
                 embed.setImage(`https://picsum.photos/id/${id}/500`)
                 break;
             case 'help':
