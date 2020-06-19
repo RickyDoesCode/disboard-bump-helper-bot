@@ -32,8 +32,18 @@ function getEmojis() {
 	return emojis;
 }
 
+function getMentionFromText(text) {
+	let startIndex = text.indexOf("<@");
+	let endIndex = text.indexOf(">");
+	return {
+		title: text.slice(0, startIndex) + '[user]' + text.slice(endIndex + 1),
+		id: text.slice(startIndex, endIndex + 1)
+	};
+}
+
 module.exports = {
 	getUserFromMention,
 	getRandomColor,
-	getEmojis
+	getEmojis,
+	getMentionFromText,
 }

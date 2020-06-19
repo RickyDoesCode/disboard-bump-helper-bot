@@ -7,6 +7,7 @@ const {
     getUserFromMention,
     getRandomColor,
     getEmojis,
+    getMentionFromText,
 } = require('./functions')
 
 const client = new Client();
@@ -83,7 +84,7 @@ client.on('message', async message => {
                 embed.setImage(`https://picsum.photos/id/${id}/500`)
                 break;
             case 'poll':
-                console.log(args);
+                // console.log(args);
                 // if (!args.length) {
                 //     embed.setTitle("Oops!")
                 //         .setDescription("Please mention a channel you want to post!")
@@ -126,9 +127,13 @@ client.on('message', async message => {
                             '' : '> '
                         }`
                     )
-                    embed.setTitle(title)
-                    .setDescription(args.join('\n'))
-                    message.channel.send(embed)
+                    let { title: newTitle, id } = getMentionFromText(title);
+                    const user = getUserFromMention(client, id); 
+                    if (user) {
+                        embed.setTitle(newTitle.replace('[user]', user.username))
+                        .setDescription(args.join('\n'))
+                        message.channel.send(embed)
+                    }
                 });
                 return;
             case 'help':
