@@ -3,6 +3,8 @@ if (process.env.NODE_ENV == 'dev') {
 } 
 
 const { Client, MessageEmbed } = require('discord.js');
+const { getUserFromMention } = require('./functions')
+
 const client = new Client();
 
 const {
@@ -29,12 +31,36 @@ client.on('message', async message => {
                     .setColor("#005bbe");
                 break;
             case 'server': 
+                // message.guild.icon;
+                embed.setTitle(message.guild.name)
+                    .setDescription(`${message.guild.memberCount} members`)
+                    .setColor("#19eb3b");
+                break;
+            case 'user':
+                if (args[0]) {
+                    const user = getUserFromMention(client, args[0]);
+                    if (!user) {
+                        embed.setTitle('Error')
+                        .setDescription('Please use a proper mention if you want to see someone else\'s avatar.')
+                        .setColor('#df0000')
+                        break;
+                    }
+                    toSend = [
+                        `Username: ${user.username}`,
+                        `This person is ${user.bot ? '' : 'not '}a bot`
+                    ]
+                    embed.setTitle("User Information")
+                        .setDescription(toSend.join('\n'))
+                        .setImage(user.displayAvatarURL({ dynamic: true }))
+                    break;
+                }
                 toSend = [
-                    `Server name: ${message.guild.name}`,
-                    `Total members: ${message.guild.memberCount}`,
+                    `Username: ${message.author.username}`,
+                    `This person is ${message.author.bot ? '' : 'not '}a bot`
                 ]
-                embed.setDescription(toSend.join("\n"))
-                .setColor("#19eb3b");
+                embed.setTitle("User Information")
+                    .setDescription(toSend.join('\n'))
+                    .setImage(message.author.displayAvatarURL({ dynamic: true }))
                 break;
             case 'random':
                 const id = Math.floor( Math.random() * 1085 ) + 1;
@@ -46,6 +72,7 @@ client.on('message', async message => {
                     'test - returns a message to check if bot\'s working',
                     'server - provide server detail (name and user count)',
                     'random - gets random picture',
+                    'user - gets user information (mention to get other people\'s info)'
                 ]
                 embed.setDescription(toSend.join('\n'))
                     .setColor("#f1d400");
