@@ -137,7 +137,7 @@ client.on('message', async message => {
                     'server - provide server detail (name and user count)',
                     'random - gets random picture',
                     'user - gets user information (mention to get other people\'s info)',
-                    'poll <channel> - create a poll on that channel'
+                    'poll - create a poll on that channel'
                 ]
                 embed.setDescription(toSend.join('\n'))
                 break;
