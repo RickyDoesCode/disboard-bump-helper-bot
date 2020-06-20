@@ -3,6 +3,7 @@ if (process.env.NODE_ENV == 'dev') {
 } 
 
 const { Client, MessageEmbed } = require('discord.js');
+const fetch = require('node-fetch');
 const {
     getUserFromMention,
     getRandomColor,
@@ -80,8 +81,21 @@ client.on('message', async message => {
                     }))
                 break;
             case 'random':
-                const id = Math.floor( Math.random() * 1085 ) + 1;
-                embed.setImage(`https://picsum.photos/id/${id}/500`)
+                const type = args[0];
+                const possibleTypes = ['dogs']
+                if (!type || !possibleTypes.includes(type)) {
+                    toSend = [
+                        `Please provide type of random image, ex:`,
+                        'random dogs - display random dog image'
+                    ];
+                    embed.setTitle('Oops')
+                        .setDescription(toSend.join('\n'))
+                        .setColor('#df0000')
+                    break;
+                }
+                const resp = await fetch('https://dog.ceo/api/breeds/image/random');
+                const { message: dogURL } = await resp.json();
+                embed.setImage(dogURL)
                 break;
             case 'poll':
                 // console.log(args);
