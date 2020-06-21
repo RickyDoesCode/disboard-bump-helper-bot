@@ -82,72 +82,50 @@ client.on('message', async message => {
                 break;
             case 'random':
                 const type = args[0];
-                const possibleTypes = ['dogs']
+                const possibleTypes = ['dogs', 'cats']
                 if (!type || !possibleTypes.includes(type)) {
                     toSend = [
                         `Please provide type of random image, ex:`,
-                        'random dogs - display random dog image'
+                        'random dogs - display random dog image',
+                        'random cats - display random cat image'
                     ];
                     embed.setTitle('Oops')
                         .setDescription(toSend.join('\n'))
                         .setColor('#df0000')
                     break;
+                } else if (type == 'dogs') {
+                    const resp = await fetch('https://api.thedogapi.com/v1/images/search');
+                    const dogs = await resp.json();
+                    embed.setImage(dogs[0].url);
+                    break;
+                } else {
+                    const resp = await fetch('https://api.thecatapi.com/v1/images/search');
+                    const cats = await resp.json();
+                    embed.setImage(cats[0].url);
+                    break;
                 }
-                const resp = await fetch('https://dog.ceo/api/breeds/image/random');
-                const { message: dogURL } = await resp.json();
-                embed.setImage(dogURL)
-                break;
             case 'poll':
-                // console.log(args);
-                // if (!args.length) {
-                //     embed.setTitle("Oops!")
-                //         .setDescription("Please mention a channel you want to post!")
-                //         .setColor('#df0000');
-                //     break;
-                // }
                 const filter = m => m.author.id == message.author.id;
-                const collector = message.channel.createMessageCollector(filter);
-                let counter = 1;
-                toSend = [
-                    "What should this poll be called?",
-                    "(We currently only hold up to 10 options)"
-                ]
-                embed.setDescription(toSend.join('\n'));
+                const collector = message.channel.createMessageCollector(filter, { max: 1, idle: 30000 });
+                embed.setDescription("What do you want to ask?");
                 message.channel.send(embed);
 
-                collector.on('collect', m => {
-                    if (m.content == 'stop') {
-                        collector.stop();
-                        return;
-                    }
-                    toSend = [
-                        `What should option #${counter} be?`,
-                        `(enter 'stop' to exit)`
-                    ]
-                    embed.setDescription(toSend.join('\n'))
-                    counter++;
-                    message.channel.send(embed);
-                });
-
-                collector.on('end', collected => {
-                    let [title, ...args] = [
+                collector.on('end', async collected => {
+                    let [title] = [
                         ...collected.values(),
                     ].map(msg => msg.content)
-                        .filter(text => text !== 'stop')
-                    const emojis = getEmojis();
-                    args = args.map(
-                        (text, index) => `> ${emojis[index]} ${text}\n${
-                            index == args.length - 1 ?
-                            '' : '> '
-                        }`
-                    )
                     let { title: newTitle, id } = getMentionFromText(title);
                     const user = getUserFromMention(client, id); 
                     if (user) {
                         embed.setTitle(newTitle.replace('[user]', user.username))
-                        .setDescription(args.join('\n'))
-                        message.channel.send(embed)
+                    } else {
+                        embed.setTitle(title)
                     }
+                    embed.setDescription("");
+                    const postedPoll = await message.channel.send(embed)
+                    postedPoll.react('🟢');
+                    postedPoll.react('🔴');
+                    postedPoll.react('🟡');
                 });
                 return;
             case 'help':
@@ -181,6 +159,7 @@ client.on('message', async message => {
             embed
                 .setTitle("Bump timer's out!")
                 .setDescription("It's time to bump again!")
+                .setTimestamp()
             message.channel.send(embed);
         }, 7200000)
     }
