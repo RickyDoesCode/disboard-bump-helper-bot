@@ -16,22 +16,6 @@ function getRandomColor() {
 	return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
 }
 
-function getEmojis() {
-	const emojis = [
-		":one:",
-		":two:",
-		":three:",
-		":four:",
-		":five:",
-		":six:",
-		":seven:",
-		":eight:",
-		":nine:",
-		":ten:"
-	];
-	return emojis;
-}
-
 function getMentionFromText(text) {
 	let startIndex = text.indexOf("<@");
 	let endIndex = text.indexOf(">");
@@ -41,9 +25,21 @@ function getMentionFromText(text) {
 	};
 }
 
+function getChannelFromText(text, defaultChannel) {
+	if (
+		text[0] == '<' &&
+		text[1] == '#' &&
+		text[text.length - 1] == '>'
+		) {
+			return text.slice(2, text.length - 1);
+		} else {
+			return defaultChannel;
+		}
+}
+
 module.exports = {
 	getUserFromMention,
 	getRandomColor,
-	getEmojis,
 	getMentionFromText,
+	getChannelFromText,
 }

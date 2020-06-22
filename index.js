@@ -2,13 +2,13 @@ if (process.env.NODE_ENV == 'dev') {
     require('dotenv').config()
 } 
 
-const { Client, MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed, TextChannel } = require('discord.js');
 const fetch = require('node-fetch');
 const {
     getUserFromMention,
     getRandomColor,
-    getEmojis,
     getMentionFromText,
+    getChannelFromText,
 } = require('./functions')
 
 const client = new Client();
@@ -105,6 +105,8 @@ client.on('message', async message => {
                     break;
                 }
             case 'poll':
+                const channelToSearch = args.length ? args[0] : '';
+                const channel = getChannelFromText(channelToSearch, message.channel.id)
                 const filter = m => m.author.id == message.author.id;
                 const collector = message.channel.createMessageCollector(filter, { max: 1, idle: 30000 });
                 embed.setDescription("What do you want to ask?");
@@ -122,7 +124,8 @@ client.on('message', async message => {
                         embed.setTitle(title)
                     }
                     embed.setDescription("");
-                    const postedPoll = await message.channel.send(embed)
+                    const fetchedChannel = client.channels.resolve(channel)
+                    const postedPoll = await fetchedChannel.send(embed)
                     postedPoll.react('🟢');
                     postedPoll.react('🔴');
                     postedPoll.react('🟡');
