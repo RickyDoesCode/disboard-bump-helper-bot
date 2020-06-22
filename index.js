@@ -129,6 +129,12 @@ client.on('message', async message => {
                     postedPoll.react('🟢');
                     postedPoll.react('🔴');
                     postedPoll.react('🟡');
+                    if (channel !== message.channel.id) {
+                        embed.setTitle("Success")
+                            .setDescription("Successfully sent poll!")
+                            .setColor('#3dff00')
+                        message.channel.send(embed)
+                    }
                 });
                 return;
             case 'help':
