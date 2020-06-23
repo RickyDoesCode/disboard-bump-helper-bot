@@ -82,26 +82,38 @@ client.on('message', async message => {
                 break;
             case 'random':
                 const type = args[0];
-                const possibleTypes = ['dogs', 'cats']
+                const possibleTypes = ['dog', 'dogfact', 'cat', 'catfact']
                 if (!type || !possibleTypes.includes(type)) {
                     toSend = [
                         `Please provide type of random image, ex:`,
-                        'random dogs - display random dog image',
-                        'random cats - display random cat image'
+                        'random dog - display random dog image',
+                        'random dogfact - display random dog fact',
+                        'random cat - display random cat image',
+                        'random catfact - display random cat fact',
                     ];
                     embed.setTitle('Oops')
                         .setDescription(toSend.join('\n'))
                         .setColor('#df0000')
                     break;
-                } else if (type == 'dogs') {
+                } else if (type == 'dog') {
                     const resp = await fetch('https://api.thedogapi.com/v1/images/search');
                     const dogs = await resp.json();
                     embed.setImage(dogs[0].url);
                     break;
-                } else {
+                } else if (type == 'dogfact') {
+                    const resp = await fetch('https://dog-api.kinduff.com/api/facts');
+                    const { facts } = await resp.json();
+                    embed.setTitle(facts[0]);
+                    break;
+                } else if (type == 'cat') {
                     const resp = await fetch('https://api.thecatapi.com/v1/images/search');
                     const cats = await resp.json();
                     embed.setImage(cats[0].url);
+                    break;
+                } else if (type == 'catfact') {
+                    const resp = await fetch('https://catfact.ninja/fact');
+                    const { fact } = await resp.json();
+                    embed.setTitle(fact);
                     break;
                 }
             case 'poll':
