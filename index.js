@@ -5,8 +5,10 @@ if (process.env.NODE_ENV == 'dev') {
 const { Client, MessageEmbed, TextChannel } = require('discord.js');
 const fetch = require('node-fetch');
 const {
-    getUserFromMention,
     getRandomColor,
+    getRandomQuote,
+    getRandomGreeting,
+    getUserFromMention,
     getMentionFromText,
     getChannelFromText,
 } = require('./functions')
@@ -36,9 +38,15 @@ client.on('message', async message => {
         const [ command, ...args ] = text.split(" ")
         let toSend = [];
         switch (command) {
-            case 'test':
-                embed.setDescription('Oh hello there! 👋')
+            case 'greet':
+                const greeting = getRandomGreeting(message.author.id);
+                embed.setDescription(greeting)
                 break;
+            case 'quote':
+                const quote = getRandomQuote();
+                embed.setDescription(quote.author)
+                    .setAuthor(quote.quote)
+            break;
             case 'server': 
                 embed.setTitle(message.guild.name)
                     .setDescription(`${message.guild.memberCount} members`)
@@ -151,11 +159,12 @@ client.on('message', async message => {
                 return;
             case 'help':
                 toSend = [
-                    'test - returns a message to check if bot\'s working',
-                    'server - provide server detail (name and user count)',
-                    'random - gets random picture',
-                    'user - gets user information (mention to get other people\'s info)',
-                    'poll - create a poll on that channel'
+                    'greet - random greeting',
+                    'quote - random quote',
+                    'server - server name and member count',
+                    'random - random picture',
+                    'user - user information (mention to get other people\'s info)',
+                    'poll - create yes/no poll on that channel'
                 ]
                 embed.setDescription(toSend.join('\n'))
                 break;

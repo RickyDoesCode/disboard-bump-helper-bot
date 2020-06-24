@@ -1,3 +1,29 @@
+function getRandomColor() {
+	return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+}
+
+function getRandomGreeting(userID) {
+	const user = `<@${userID}>`;
+	const greetings = [
+		`Hello ${user} :wave:\nHow are you doing today?`,
+		`Hey ${user} :wave:\nHave a nice day!`,
+		`Hey, it's ${user}!\nHave a wonderful day!`,
+		`Good day, ${user}!\nHappy coding!`,
+		`What's up ${user}!`,
+	];
+	const randomIndex = Math.floor(Math.random() * greetings.length);
+	console.log(randomIndex);
+	const randomGreeting = greetings[randomIndex];
+	return randomGreeting;
+}
+
+function getRandomQuote() {
+	const quotes = require("../utils/quotes.json");
+	const randomIndex = Math.floor(Math.random() * quotes.length);
+	const randomQuote = quotes[randomIndex];
+	return randomQuote;
+}
+
 function getUserFromMention(client, mention) {
 	if (!mention) return;
 
@@ -10,10 +36,6 @@ function getUserFromMention(client, mention) {
 
 		return client.users.cache.get(mention);
 	}
-}
-
-function getRandomColor() {
-	return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
 }
 
 function getMentionFromText(text) {
@@ -38,8 +60,10 @@ function getChannelFromText(text, defaultChannel) {
 }
 
 module.exports = {
-	getUserFromMention,
 	getRandomColor,
+	getRandomQuote,
+	getRandomGreeting,
+	getUserFromMention,
 	getMentionFromText,
 	getChannelFromText,
 }
