@@ -40,8 +40,8 @@ client.on('message', async message => {
         switch (command) {
             case 'ping':
                 const ping = client.ws.ping;
-                embed.setTitle('PING')
-                    .setDescription(`${ping}ms`)
+                embed.setTitle('PONG!')
+                    .setDescription(`Took me ${ping}ms`)
                 break;
             case 'greet':
                 const greeting = getRandomGreeting(message.author.id);
