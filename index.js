@@ -38,6 +38,11 @@ client.on('message', async message => {
         const [ command, ...args ] = text.split(" ")
         let toSend = [];
         switch (command) {
+            case 'ping':
+                const ping = client.ws.ping;
+                embed.setTitle('PING')
+                    .setDescription(`${ping}ms`)
+                break;
             case 'greet':
                 const greeting = getRandomGreeting(message.author.id);
                 embed.setDescription(greeting)
@@ -159,6 +164,7 @@ client.on('message', async message => {
                 return;
             case 'help':
                 toSend = [
+                    'ping - bot latency',
                     'greet - random greeting',
                     'quote - random quote',
                     'server - server name and member count',
