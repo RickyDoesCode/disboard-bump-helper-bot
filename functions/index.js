@@ -11,7 +11,6 @@ function getRandomGreeting(user) {
 		`What's up ${user}!`,
 	];
 	const randomIndex = Math.floor(Math.random() * greetings.length);
-	console.log(randomIndex);
 	const randomGreeting = greetings[ randomIndex ];
 	return randomGreeting;
 }
@@ -23,17 +22,23 @@ function getRandomQuote() {
 	return randomQuote;
 }
 
-function getUserFromMention(client,mention) {
+function getUserFromMention(mention,) {
 	if (!mention) return;
+
+	if (mention == '@everyone') return '@everyone';
 
 	if (mention.startsWith('<@') && mention.endsWith('>')) {
 		mention = mention.slice(2,-1);
 
 		if (mention.startsWith('!')) {
 			mention = mention.slice(1);
+			return `<@!${mention}>`;
 		}
 
-		return client.users.cache.get(mention);
+		if (mention.startsWith("&")) {
+			mention = mention.slice(1);
+			return `<@&${mention}>`;
+		}
 	}
 }
 

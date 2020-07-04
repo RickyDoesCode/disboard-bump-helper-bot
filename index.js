@@ -44,7 +44,8 @@ client.on('message',async message => {
                     .setDescription(`Took me ${ping}ms`);
                 break;
             case 'greet':
-                const ID = getUserFromMention(client,args[ 0 ]) || `<@${message.author.id}>`;
+                console.log(args[ 0 ]);
+                const ID = getUserFromMention(args[ 0 ]) || `<@${message.author.id}>`;
                 const greeting = getRandomGreeting(ID);
                 embed.setDescription(greeting);
                 break;
@@ -64,7 +65,7 @@ client.on('message',async message => {
                 break;
             case 'user':
                 if (args[ 0 ]) {
-                    const user = getUserFromMention(client,args[ 0 ]);
+                    const user = getUserFromMention(args[ 0 ]);
                     if (!user) {
                         embed.setTitle('Error')
                             .setDescription('Please use a proper mention if you want to see someone else\'s avatar.')
@@ -143,13 +144,9 @@ client.on('message',async message => {
                         ...collected.values(),
                     ].map(msg => msg.content);
                     let { title: newTitle,id } = getMentionFromText(title);
-                    const user = getUserFromMention(client,id);
-                    if (user) {
-                        embed.setTitle(newTitle.replace('[user]',user.username));
-                    } else {
-                        embed.setTitle(title);
-                    }
-                    embed.setDescription("");
+                    const user = getUserFromMention(id);
+                    embed.setTitle("POLL");
+                    embed.setDescription(user ? newTitle.replace('[user]',user) : title);
                     const fetchedChannel = client.channels.resolve(channel);
                     const postedPoll = await fetchedChannel.send(embed);
                     postedPoll.react('🟢');
