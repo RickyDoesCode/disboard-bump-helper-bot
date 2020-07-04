@@ -197,7 +197,8 @@ client.on('message',async message => {
                     'random - random picture',
                     'user - user information (mention to get other people\'s info)',
                     'poll - create yes/no poll on that channel',
-                    '8ball - play magic 8 ball'
+                    '8ball - play magic 8 ball',
+                    'meme - random meme (unfiltered, may include NSFW content)'
                 ];
                 embed.setDescription(toSend.join('\n'));
                 break;
