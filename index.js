@@ -2,7 +2,7 @@ if (process.env.NODE_ENV == 'dev') {
     require('dotenv').config();
 }
 
-const { Client,MessageEmbed,TextChannel } = require('discord.js');
+const { Client,MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 const {
     getRandomColor,
@@ -45,7 +45,6 @@ client.on('message',async message => {
                     .setDescription(`Took me ${ping}ms`);
                 break;
             case 'greet':
-                console.log(args[ 0 ]);
                 const ID = getUserFromMention(args[ 0 ]) || `<@${message.author.id}>`;
                 const greeting = getRandomGreeting(ID);
                 embed.setDescription(greeting);
@@ -182,6 +181,12 @@ client.on('message',async message => {
                     ]);
                     message.channel.send(embed);
                 });
+                break;
+            case 'meme':
+                const resp = await fetch('https://meme-api.herokuapp.com/gimme');
+                const { url: image } = await resp.json();
+                embed.setTitle("MEME")
+                    .setImage(image);
                 break;
             case 'help':
                 toSend = [

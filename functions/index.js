@@ -45,7 +45,6 @@ function getUserFromMention(mention,) {
 function getRandom8BallResponse() {
 	const responses = require("../utils/8ball.json");
 	const random = Math.floor(Math.random() * responses.length) || 0;
-	console.log(random);
 	return responses[ random ];
 }
 
