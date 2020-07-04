@@ -8,6 +8,7 @@ const {
     getRandomColor,
     getRandomQuote,
     getRandomGreeting,
+    getRandom8BallResponse,
     getUserFromMention,
     getMentionFromText,
     getChannelFromText,
@@ -64,32 +65,27 @@ client.on('message',async message => {
                     }));
                 break;
             case 'user':
+                let user;
                 if (args[ 0 ]) {
-                    const user = getUserFromMention(args[ 0 ]);
-                    if (!user) {
-                        embed.setTitle('Error')
-                            .setDescription('Please use a proper mention if you want to see someone else\'s avatar.')
-                            .setColor('#df0000');
-                        break;
-                    }
-                    embed.setTitle("User Information")
-                        .addFields(
-                            { name: "Username",value: user.username },
-                            { name: "Status",value: user.bot ? 'Bot' : 'Human' }
-                        )
-                        .setImage(user.displayAvatarURL({
-                            dynamic: true,
-                            format: 'png',
-                            size: 1024
-                        }));
+                    let ID;
+                    ID = getUserFromMention(args[ 0 ]);
+                    ID = ID.slice(3,ID.length - 1);
+                    user = client.users.cache.get(ID);
+                } else {
+                    user = message.author;
+                }
+                if (!user) {
+                    embed.setTitle('Error')
+                        .setDescription('Please use a proper mention if you want to see someone else\'s avatar.')
+                        .setColor('#df0000');
                     break;
                 }
                 embed.setTitle("User Information")
                     .addFields(
-                        { name: "Username",value: message.author.username },
-                        { name: "Status",value: message.author.bot ? 'Bot' : 'Human' }
+                        { name: "Username",value: user.username },
+                        { name: "Status",value: user.bot ? "Bot" : "Human" }
                     )
-                    .setImage(message.author.displayAvatarURL({
+                    .setImage(user.displayAvatarURL({
                         dynamic: true,
                         format: 'png',
                         size: 1024
@@ -134,12 +130,12 @@ client.on('message',async message => {
             case 'poll':
                 const channelToSearch = args.length ? args[ 0 ] : '';
                 const channel = getChannelFromText(channelToSearch,message.channel.id);
-                const filter = m => m.author.id == message.author.id;
-                const collector = message.channel.createMessageCollector(filter,{ max: 1,idle: 30000 });
+                const pollFilter = m => m.author.id == message.author.id;
+                const pollCollector = message.channel.createMessageCollector(pollFilter,{ max: 1,idle: 30000 });
                 embed.setDescription("What do you want to ask?");
                 message.channel.send(embed);
 
-                collector.on('end',async collected => {
+                pollCollector.on('end',async collected => {
                     let [ title ] = [
                         ...collected.values(),
                     ].map(msg => msg.content);
@@ -160,6 +156,33 @@ client.on('message',async message => {
                     }
                 });
                 return;
+            case '8ball':
+                const eightBallFilter = m => m.author.id == message.author.id;
+                const eightBallCollector = message.channel.createMessageCollector(eightBallFilter,{ max: 1,idle: 30000 });
+                embed.setDescription("What do you want to ask?");
+                message.channel.send(embed);
+
+                eightBallCollector.on('end',async collected => {
+                    let [ question ] = [
+                        ...collected.values(),
+                    ].map(msg => msg.content);
+                    let { title: formattedQuestion,id } = getMentionFromText(question);
+                    const user = getUserFromMention(id);
+                    embed.setTitle("8 BALL");
+                    embed.setDescription("");
+                    embed.addFields([
+                        {
+                            name: 'You Asked :',
+                            value: user ? formattedQuestion.replace('[user]',user) : question,
+                        },
+                        {
+                            name: "8-Ball replied :",
+                            value: getRandom8BallResponse()
+                        }
+                    ]);
+                    message.channel.send(embed);
+                });
+                break;
             case 'help':
                 toSend = [
                     'ping - bot latency',
@@ -168,7 +191,8 @@ client.on('message',async message => {
                     'server - server name and member count',
                     'random - random picture',
                     'user - user information (mention to get other people\'s info)',
-                    'poll - create yes/no poll on that channel'
+                    'poll - create yes/no poll on that channel',
+                    '8ball - play magic 8 ball'
                 ];
                 embed.setDescription(toSend.join('\n'));
                 break;

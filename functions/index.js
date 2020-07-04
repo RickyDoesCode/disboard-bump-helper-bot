@@ -42,6 +42,13 @@ function getUserFromMention(mention,) {
 	}
 }
 
+function getRandom8BallResponse() {
+	const responses = require("../utils/8ball.json");
+	const random = Math.floor(Math.random() * responses.length) || 0;
+	console.log(random);
+	return responses[ random ];
+}
+
 function getMentionFromText(text) {
 	let startIndex = text.indexOf("<@");
 	let endIndex = text.indexOf(">");
@@ -67,6 +74,7 @@ module.exports = {
 	getRandomColor,
 	getRandomQuote,
 	getRandomGreeting,
+	getRandom8BallResponse,
 	getUserFromMention,
 	getMentionFromText,
 	getChannelFromText,
