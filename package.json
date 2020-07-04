@@ -10,10 +10,11 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=dev npx nodemon index.js",
+    "dev": "cross-env NODE_ENV=dev npx nodemon index.js",
     "start": "node index.js"
   }
 }
