@@ -14,7 +14,7 @@
     "dotenv": "^8.2.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev npx nodemon index.js",
+    "dev": "cross-env npx nodemon index.js",
     "start": "node index.js"
   }
 }

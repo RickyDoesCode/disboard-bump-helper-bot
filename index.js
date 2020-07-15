@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV == 'dev') {
-    require('dotenv').config();
-}
+require('dotenv').config();
 
 const { Client,MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
