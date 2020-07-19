@@ -4,10 +4,16 @@
 
 # Commands
 
-### test - returns a message to check if bot's working
+### ping - returns bot latency
+### greet - greets message sender or mentioned user
+### quote - generates random quote
 ### server - provide server detail (name and user count)
+### random - generates random fact or picture (based on category)
+### user - generates user info (message sender or mentioned user)
+### poll - creates a agree/disagree poll (send in mentioned or current channel)
+### 8ball - play magic 8 ball
+### meme - generates random meme
 ### help - lists all commands
-### random - gets a random picture
 
 # Links
 [Invite Link](https://discord.com/oauth2/authorize?client_id=697682232797560852&scope=bot&permissions=203840)
