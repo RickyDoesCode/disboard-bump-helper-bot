@@ -188,15 +188,16 @@ client.on('message',async message => {
                 break;
             case 'help':
                 toSend = [
-                    'ping - bot latency',
-                    'greet - random greeting',
-                    'quote - random quote',
-                    'server - server name and member count',
-                    'random - random picture',
-                    'user - user information (mention to get other people\'s info)',
-                    'poll - create yes/no poll on that channel',
+                    'ping - returns bot latency',
+                    'greet - greets message sender or mentioned user',
+                    'quote - generates random quote',
+                    'server - provide server detail (name and user count)',
+                    'random - generates random fact or picture (based on category)',
+                    'user - generates user info (message sender or mentioned user)',
+                    'poll - creates a agree/disagree poll (send in mentioned or current channel)',
                     '8ball - play magic 8 ball',
-                    'meme - random meme (unfiltered, may include NSFW content)'
+                    'meme - generates random meme',
+                    'help - lists all commands',
                 ];
                 embed.setDescription(toSend.join('\n'));
                 break;
