@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { Client,MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 const {
     getRandomColor,
@@ -19,12 +19,12 @@ const {
     TOKEN: token
 } = process.env;
 
-client.once('ready',() => {
+client.once('ready', () => {
     console.log("Bot has started");
-    client.user.setActivity(prefix,{ type: 'LISTENING' });
+    client.user.setActivity(prefix, { type: 'LISTENING' });
 });
 
-client.on('message',async message => {
+client.on('message', async message => {
     const embed = new MessageEmbed()
         .setColor(getRandomColor())
         .setTimestamp()
@@ -33,8 +33,9 @@ client.on('message',async message => {
             'https://cdn.discordapp.com/avatars/404342560551731201/cdc1a88b47c0c847966d0f37c37ee2a0.png?size=1024',
         );
     if (message.content.startsWith(prefix)) {
-        const text = message.content.replace(prefix,"");
-        const [ command,...args ] = text.split(" ");
+        message.channel.startTyping();
+        const text = message.content.replace(prefix, "");
+        const [ command, ...args ] = text.split(" ");
         let toSend = [];
         switch (command) {
             case 'ping':
@@ -66,7 +67,7 @@ client.on('message',async message => {
                 if (args[ 0 ]) {
                     let ID;
                     ID = getUserFromMention(args[ 0 ]);
-                    ID = ID.slice(3,ID.length - 1);
+                    ID = ID.slice(3, ID.length - 1);
                     user = client.users.cache.get(ID);
                 } else {
                     user = message.author;
@@ -79,8 +80,8 @@ client.on('message',async message => {
                 }
                 embed.setTitle("User Information")
                     .addFields(
-                        { name: "Username",value: user.username },
-                        { name: "Status",value: user.bot ? "Bot" : "Human" }
+                        { name: "Username", value: user.username },
+                        { name: "Status", value: user.bot ? "Bot" : "Human" }
                     )
                     .setImage(user.displayAvatarURL({
                         dynamic: true,
@@ -90,7 +91,7 @@ client.on('message',async message => {
                 break;
             case 'random':
                 const type = args[ 0 ];
-                const possibleTypes = [ 'dog','dogfact','cat','catfact' ];
+                const possibleTypes = [ 'dog', 'dogfact', 'cat', 'catfact' ];
                 if (!type || !possibleTypes.includes(type)) {
                     toSend = [
                         `Please provide type of random image, ex:`,
@@ -126,20 +127,19 @@ client.on('message',async message => {
                 }
             case 'poll':
                 const channelToSearch = args.length ? args[ 0 ] : '';
-                const channel = getChannelFromText(channelToSearch,message.channel.id);
+                const channel = getChannelFromText(channelToSearch, message.channel.id);
                 const pollFilter = m => m.author.id == message.author.id;
-                const pollCollector = message.channel.createMessageCollector(pollFilter,{ max: 1,idle: 30000 });
+                const pollCollector = message.channel.createMessageCollector(pollFilter, { max: 1, idle: 30000 });
                 embed.setDescription("What do you want to ask?");
                 message.channel.send(embed);
 
-                pollCollector.on('end',async collected => {
+                pollCollector.on('end', async collected => {
                     let [ title ] = [
                         ...collected.values(),
                     ].map(msg => msg.content);
-                    let { title: newTitle,id } = getMentionFromText(title);
+                    let { title: newTitle, id } = getMentionFromText(title);
                     const user = getUserFromMention(id);
-                    embed.setTitle("POLL");
-                    embed.setDescription(user ? newTitle.replace('[user]',user) : title);
+                    embed.setTitle("POLL").setDescription(user ? newTitle.replace('[user]', user) : title).setFooter(`Poll initiated by ${message.author.username}`);
                     const fetchedChannel = client.channels.resolve(channel);
                     const postedPoll = await fetchedChannel.send(embed);
                     postedPoll.react('🟢');
@@ -151,26 +151,27 @@ client.on('message',async message => {
                             .setColor('#3dff00');
                         message.channel.send(embed);
                     }
+                    message.channel.stopTyping();
                 });
                 return;
             case '8ball':
                 const eightBallFilter = m => m.author.id == message.author.id;
-                const eightBallCollector = message.channel.createMessageCollector(eightBallFilter,{ max: 1,idle: 30000 });
+                const eightBallCollector = message.channel.createMessageCollector(eightBallFilter, { max: 1, idle: 30000 });
                 embed.setDescription("What do you want to ask?");
                 message.channel.send(embed);
 
-                eightBallCollector.on('end',async collected => {
+                eightBallCollector.on('end', async collected => {
                     let [ question ] = [
                         ...collected.values(),
                     ].map(msg => msg.content);
-                    let { title: formattedQuestion,id } = getMentionFromText(question);
+                    let { title: formattedQuestion, id } = getMentionFromText(question);
                     const user = getUserFromMention(id);
                     embed.setTitle("8 BALL");
                     embed.setDescription("");
                     embed.addFields([
                         {
                             name: 'You Asked :',
-                            value: user ? formattedQuestion.replace('[user]',user) : question,
+                            value: user ? formattedQuestion.replace('[user]', user) : question,
                         },
                         {
                             name: "8-Ball replied :",
@@ -178,6 +179,7 @@ client.on('message',async message => {
                         }
                     ]);
                     message.channel.send(embed);
+                    message.channel.stopTyping();
                 });
                 break;
             case 'meme':
@@ -211,6 +213,7 @@ client.on('message',async message => {
                 break;
         }
         message.channel.send(embed);
+        message.channel.stopTyping();
     }
     if (
         message.embeds.length &&
@@ -223,7 +226,7 @@ client.on('message',async message => {
                 .setDescription("It's time to bump again!")
                 .setTimestamp();
             message.channel.send(embed);
-        },7200000);
+        }, 7200000);
     }
 });
 
