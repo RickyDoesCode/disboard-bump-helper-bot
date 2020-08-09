@@ -24,32 +24,49 @@ module.exports = class PollCommand extends Command {
                     validate: text => text[ 0 ] == '<' &&
                         text[ 1 ] == '#' &&
                         text[ text.length - 1 ] == '>'
+                },
+                {
+                    key: "time",
+                    prompt: "How long should I wait before I send it? (in minutes)",
+                    type: "string",
+                    validate: text => !isNaN(Number(text))
                 }
             ]
         });
     }
 
-    async run(msg, { description, channel }) {
-        const customEmbed = new MessageEmbed()
+    async run(msg, { description, channel, time }) {
+        let customEmbed = new MessageEmbed()
             .setColor(colors.green)
-            .setTitle("POLL")
-            .setDescription(description)
+            .setTitle("SUCCESS")
+            .setDescription(`Your poll has been scheduled successfully.`)
             .setTimestamp()
-            .setFooter(`Poll initiated by ${msg.author.username}`);
+            .setFooter(`Poll scheduled by ${msg.author.username}`);
 
         const foundChannel = this.client.channels.resolve(getChannelFromText(channel));
 
-        const postedPoll = await foundChannel.send(customEmbed);
+        if (time != 0) msg.embed(customEmbed);
 
-        postedPoll.react('🟢');
-        postedPoll.react('🔴');
-        postedPoll.react('🟡');
+        setTimeout(async () => {
+            customEmbed = new MessageEmbed()
+                .setColor(colors.green)
+                .setTitle("POLL")
+                .setDescription(description)
+                .setTimestamp()
+                .setFooter(`Poll initiated by ${msg.author.username}`);
 
-        if (getChannelFromText(channel) !== msg.channel.id) {
-            customEmbed.setTitle("Success")
-                .setDescription("Successfully sent poll!")
-                .setColor('#3dff00');
-            msg.embed(customEmbed);
-        }
+            const postedPoll = await foundChannel.send(customEmbed);
+
+            postedPoll.react('🟢');
+            postedPoll.react('🔴');
+            postedPoll.react('🟡');
+
+            if (getChannelFromText(channel) !== msg.channel.id) {
+                customEmbed.setTitle("Success")
+                    .setDescription("Successfully sent poll!")
+                    .setColor(colors.green);
+                msg.embed(customEmbed);
+            }
+        }, time * 60000);
     }
 };
