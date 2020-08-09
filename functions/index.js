@@ -1,5 +1,5 @@
 function getRandomColor() {
-	return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6,'0');
+	return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
 }
 
 function getRandomGreeting(user) {
@@ -28,7 +28,7 @@ function getUserFromMention(mention,) {
 	if (mention == '@everyone') return '@everyone';
 
 	if (mention.startsWith('<@') && mention.endsWith('>')) {
-		mention = mention.slice(2,-1);
+		mention = mention.slice(2, -1);
 
 		if (mention.startsWith('!')) {
 			mention = mention.slice(1);
@@ -52,21 +52,13 @@ function getMentionFromText(text) {
 	let startIndex = text.indexOf("<@");
 	let endIndex = text.indexOf(">");
 	return {
-		title: text.slice(0,startIndex) + '[user]' + text.slice(endIndex + 1),
-		id: text.slice(startIndex,endIndex + 1)
+		title: text.slice(0, startIndex) + '[user]' + text.slice(endIndex + 1),
+		id: text.slice(startIndex, endIndex + 1)
 	};
 }
 
-function getChannelFromText(text,defaultChannel) {
-	if (
-		text[ 0 ] == '<' &&
-		text[ 1 ] == '#' &&
-		text[ text.length - 1 ] == '>'
-	) {
-		return text.slice(2,text.length - 1);
-	} else {
-		return defaultChannel;
-	}
+function getChannelFromText(text) {
+	return text.slice(2, text.length - 1);
 }
 
 module.exports = {

@@ -1,5 +1,5 @@
 {
-  "name": "bumper-discord",
+  "name": "bump-bot",
   "version": "1.0.0",
   "description": "A discord bot to help notify last bump",
   "main": "index.js",
@@ -7,14 +7,14 @@
   "license": "MIT",
   "dependencies": {
     "discord.js": "^12.2.0",
+    "discord.js-commando": "github:discordjs/Commando",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0"
   },
   "scripts": {
-    "dev": "cross-env npx nodemon index.js",
+    "dev": "npx nodemon index.js",
     "start": "node index.js"
   }
 }
