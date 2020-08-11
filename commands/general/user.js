@@ -15,7 +15,11 @@ module.exports = class UserCommand extends Command {
                 {
                     key: "user",
                     prompt: "Who do you want to get information about? (please mention)",
-                    type: "string"
+                    type: "string",
+                    error: "Please mention the user you want to get information about.",
+                    validate: text => text[ 0 ] == '<' &&
+                        text[ 1 ] == '@' &&
+                        text[ text.length - 1 ] == '>'
                 }
             ]
         });

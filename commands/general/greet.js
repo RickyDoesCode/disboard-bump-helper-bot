@@ -19,12 +19,17 @@ module.exports = class GreetCommand extends Command {
                     key: "user",
                     prompt: "which user do you want to greet?",
                     type: "string",
+                    error: "Please mention the user you want to greet.",
+                    validate: text => text[ 0 ] == '<' &&
+                        text[ 1 ] == '@' &&
+                        text[ text.length - 1 ] == '>'
                 },
             ]
         });
     }
 
     run(msg, { user }) {
+        console.log(user);
         const ID = getUserFromMention(user);
         const greeting = getRandomGreeting(ID);
         const customEmbed = new MessageEmbed()

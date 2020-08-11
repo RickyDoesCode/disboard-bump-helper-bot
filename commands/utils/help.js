@@ -16,6 +16,7 @@ module.exports = class HelpCommand extends Command {
     run(msg) {
         const toSend = [
             '**ping** - Checks the bot\'s ping to the Discord server.',
+            '**uptime** - Checks the bot\'s uptime.',
             '**greet** - Greets sender or mentioned user with a personalized message.',
             '**quote** - Generates a random quote.',
             '**server** - Provides basic server details.',
